@@ -38,7 +38,7 @@ DISTRO="$1"
 # Check image path is set else exit
 if [ -z "$DISTRO" ]; then
     _warn $_piline
-    _warn "ERR: No image path supplied"
+    _warn "ERR: No image path or url supplied"
     _warn $_piline
     exit 0
 fi
@@ -114,9 +114,25 @@ _rawdisk=$( echo $_udisk | awk 'sub("..$", "")' | sed 's/disk/rdisk/')
 echo "Unmounting Disk"
 diskutil unmount $_udisk
 
+# If DISTRO is a url, then download and find the .img file
+url_regex='https?://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+if [[ $DISTRO =~ $url_regex ]]; then
+    tmpdir=`mktemp -d -t pedal`
+    pushd $tmpdir
+    curl -ORL $DISTRO
+    DISTRO=`ls $PWD/*`
+    popd
+fi
+
+# If the file is a zip, unzip it
+zip_regex='.*zip$'
+if [[ ${DISTRO} =~ $zip_regex ]]; then
+ unzip -fo $DISTRO && rm -f $DISTRO && DISTRO=`ls $PWD/*img`
+fi
+
 echo "Writing image"
 echo "Ctrl+T to see progress.."
-sudo dd bs=1m if=${DISTRO} of=${_rawdisk}
+sudo dd bs=1m if=${IMAGE} of=${_rawdisk}
 
 # Eject disk
 echo "Ejecting Disk"

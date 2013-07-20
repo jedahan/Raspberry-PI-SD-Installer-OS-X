@@ -6,9 +6,9 @@
 
 #####Usage:
 
-1. Simply execute the install script from Terminal and pass the image to write. (Image, not ZIP)
+1. Simply execute the install script from Terminal and pass the image or url to write.
 
-	eg. `sudo ./install ~/Downloads/wheezyDebian.img`
+	eg. `sudo ./install ~/Downloads/wheezyDebian.img`, or `sudo ./install http://files.velocix.com/c1410/images/raspbian/2013-05-25-wheezy-raspbian/2013-05-25-wheezy-raspbian.zip`
 
 2. Select the disk to write the image to by selecting the disk number provided in the output.
 
