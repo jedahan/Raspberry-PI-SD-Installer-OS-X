@@ -127,7 +127,11 @@ fi
 # If the file is a zip, unzip it
 zip_regex='.*zip$'
 if [[ ${DISTRO} =~ $zip_regex ]]; then
- unzip -fo $DISTRO && rm -f $DISTRO && DISTRO=`ls $PWD/*img`
+    tmpdir=`mktemp -d -t pedal`
+    pushd $tmpdir
+    unzip $DISTRO
+    DISTRO=`ls $PWD/*`
+    popd
 fi
 
 echo "Writing image"
